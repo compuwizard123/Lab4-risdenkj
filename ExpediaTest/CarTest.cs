@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using Expedia;
 using Rhino.Mocks;
+using System.Collections.Generic;
 
 namespace ExpediaTest
 {
@@ -33,14 +34,14 @@ namespace ExpediaTest
 		[Test()]
 		public void TestThatCarHasCorrectBasePriceForTenDays()
 		{
-            var target = new Car(10);
+            var target = ObjectMother.BMW();
 			Assert.AreEqual(80, target.getBasePrice());	
 		}
 		
 		[Test()]
 		public void TestThatCarHasCorrectBasePriceForSevenDays()
 		{
-			var target = new Car(7);
+			var target = ObjectMother.Saab();
 			Assert.AreEqual(10*7*.8, target.getBasePrice());
 		}
 		
@@ -50,5 +51,39 @@ namespace ExpediaTest
 		{
 			new Car(-5);
 		}
+
+        [Test()]
+        public void TestThatCarGetsCarLocation()
+        {
+            IDatabase mockDatabase = mocks.Stub<IDatabase>();
+
+            int carNumber = 10;
+            String carLocation = "Home";
+
+            using (mocks.Record())
+            {
+                mockDatabase.getCarLocation(carNumber);
+                LastCall.Return(carLocation);
+            }
+
+            var target = new Car(10);
+            target.Database = mockDatabase;
+
+            String result;
+            result = target.getCarLocation(carNumber);
+            Assert.AreEqual(result, carLocation);
+        }
+
+        [Test()]
+        public void TestThatCarHasCorrectMileage()
+        {
+            IDatabase mockDatabase = mocks.Stub<IDatabase>();
+            Int32 Miles = 152000;
+            mockDatabase.Miles = Miles;
+            var target = new Car(10);
+            target.Database = mockDatabase;
+            Int32 result = target.Mileage;
+            Assert.AreEqual(result, Miles);
+        }
 	}
 }

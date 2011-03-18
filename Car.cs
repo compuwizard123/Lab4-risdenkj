@@ -17,7 +17,7 @@ namespace Expedia
 			get; set;	
 		}
 		
-        //Get's the current mileage associated with the car
+		//Get's the current mileage associated with the car
 		public Int32 Mileage
 		{
 			get
@@ -26,11 +26,11 @@ namespace Expedia
 			}
 		}
 
-        //Get's the current location of the car
-        public String getCarLocation(int carNumber)
-        {
-            return Database.getCarLocation(carNumber);
-        }
+		//Get's the current location of the car
+		public String getCarLocation(int carNumber)
+		{
+			return Database.getCarLocation(carNumber);
+		}
 		
 		#region Booking implementation
 		public double getBasePrice ()

@@ -53,6 +53,49 @@ namespace ExpediaTest
 		{
 			new Hotel(-5);
 		}
-		
+
+		[Test()]
+		public void TestThatHotelDoesGetRoomOccupantFromTheDatabase()
+		{
+			IDatabase mockDatabase = mocks.Stub<IDatabase>();
+
+			String roomOccupant = "Whale Rider";
+			String anotherRoomOccupant = "Raptor Wrangler";
+
+			using (mocks.Record())
+			{
+				// The mock will return "Whale Rider" when the call is made with 24
+				mockDatabase.getRoomOccupant(24);
+				LastCall.Return(roomOccupant);
+				// The mock will return "Raptor Wrangler" when the call is made with 1025
+				mockDatabase.getRoomOccupant(1025);
+				LastCall.Return(anotherRoomOccupant);
+			}
+
+			var target = new Hotel(10);
+			target.Database = mockDatabase;
+
+			String result;
+			result = target.getRoomOccupant(1025);
+			Assert.AreEqual(result, anotherRoomOccupant);
+			result = target.getRoomOccupant(24);
+			Assert.AreEqual(result, roomOccupant);
+		}
+
+		[Test()]
+		public void TestThatHotelDoesGetRoomCountFromDatabase()
+		{
+			IDatabase mockDatabase = mocks.Stub<IDatabase>();
+			List<Int32> Rooms = new List<int>();
+			for (var i = 0; i < 100; i++)
+			{
+				Rooms.Add(i);
+			}
+			mockDatabase.Rooms = Rooms;
+			var target = new Hotel(10);
+			target.Database = mockDatabase;
+			int roomCount = target.AvailableRooms;
+			Assert.AreEqual(roomCount, Rooms.Count);
+		}
 	}
 }
